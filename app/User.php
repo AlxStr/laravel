@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    const STATUS_WAIT   = 'wait';
+    const STATUS_ACTIVE = 'active';
+
     use Notifiable;
 
     /**
@@ -16,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'status', 'verify_token'
     ];
 
     /**
@@ -25,7 +28,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'verify_token'
     ];
 
     /**
