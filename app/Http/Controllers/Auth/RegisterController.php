@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\Auth\VerifyEmail;
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Str;
 
+/**
+ * Class RegisterController
+ * @package App\Http\Controllers\Auth
+ */
 class RegisterController extends Controller
 {
     use RegistersUsers;
@@ -34,54 +39,64 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Show the application registration form.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return \Illuminate\Http\Response
      */
-    protected function validator(array $data)
+    public function showRegistrationForm(): string
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        return view('auth.register');
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * @param RegisterRequest $request
      *
-     * @param  array  $data
-     * @return \App\User
+     * @return \Illuminate\Http\RedirectResponse
      */
-    protected function create(array $data)
+    public function register(RegisterRequest $request)
     {
         $user = User::create([
-            'name'         => $data['name'],
-            'email'        => $data['email'],
-            'password'     => Hash::make($data['password']),
+            'name'         => $request['name'],
+            'email'        => $request['email'],
+            'password'     => Hash::make($request['password']),
             'verify_token' => Str::random(),
             'status'       => User::STATUS_WAIT,
         ]);
 
-        //Mail::to($user->email)->send(new VerifyEmail($user));
-
-        return $user;
-    }
-
-    /**
-     * The user has been registered.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function registered(Request $request, $user)
-    {
-        $this->guard()->logout();
+//        Mail::to($user->email)->send(new VerifyEmail($user));
+        event(new Registered($user));
 
         return redirect()
             ->route('login')
             ->with('success', 'Check email and click on the link for verify');
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function verify(string $token)
+    {
+        if (!$user = User::where('verify_token', $token)->first()) {
+            return redirect()
+                ->route('login')
+                ->with('error', 'Your link cannot be identified.');
+        }
+
+        if ($user->status === User::STATUS_ACTIVE) {
+            return redirect()
+                ->route('login')
+                ->with('error', 'Your link cannot be identified.');
+        }
+
+        $user->status = User::STATUS_ACTIVE;
+        $user->verify_token = null;
+
+        $user->save();
+
+        return redirect()
+            ->route('login')
+            ->with('success', 'Your email is verified.');
     }
 }

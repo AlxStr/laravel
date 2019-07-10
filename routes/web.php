@@ -13,6 +13,8 @@
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('/verify/{token}', 'Auth\RegisterController@verify')->name('register.verify');
+
 Route::get('/cabinet', 'Cabinet\CabinetController@index')->name('cabinet');
 
 Auth::routes();
