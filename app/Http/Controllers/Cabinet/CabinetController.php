@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Entity\User;
 use App\Http\Controllers\Controller;
 
 class CabinetController extends Controller
