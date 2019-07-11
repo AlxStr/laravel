@@ -6,6 +6,10 @@ Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
 });
 
+Breadcrumbs::for('admin.home', function ($trail) {
+    $trail->push('Dashboard', route('admin.home'));
+});
+
 Breadcrumbs::for('login', function ($trail) {
     $trail->parent('home');
     $trail->push('Login', route('login'));

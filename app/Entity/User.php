@@ -1,11 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Entity;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ *
+ * @package App\Entity
+ *
+ * @property string name
+ * @property string email
+ * @property string password
+ * @property string status
+ * @property string verify_token
+ */
 class User extends Authenticatable
 {
     const STATUS_WAIT   = 'wait';
