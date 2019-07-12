@@ -17,6 +17,7 @@ use Mockery\Exception;
  * @property string email
  * @property string password
  * @property string status
+ * @property string role
  * @property string verify_token
  */
 class User extends Authenticatable
@@ -24,6 +25,11 @@ class User extends Authenticatable
     /** User active statuses */
     const STATUS_WAIT   = 'wait';
     const STATUS_ACTIVE = 'active';
+
+
+    /** User roles */
+    const ROLE_USER  = 'user';
+    const ROLE_ADMIN = 'admin';
 
     use Notifiable;
 
@@ -37,6 +43,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
+        'role',
         'verify_token',
     ];
 
@@ -77,6 +84,7 @@ class User extends Authenticatable
             'password'     => bcrypt($password),
             'verify_token' => Str::uuid(),
             'status'       => self::STATUS_WAIT,
+            'role'         => self::ROLE_USER
         ]);
     }
 
@@ -95,6 +103,7 @@ class User extends Authenticatable
             'email'        => $email,
             'password'     => bcrypt(Str::random()),
             'status'       => self::STATUS_ACTIVE,
+            'role'         => self::ROLE_USER
         ]);
     }
 
@@ -112,6 +121,30 @@ class User extends Authenticatable
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /**
+     * @param $role
+     */
+    public function changeRole($role): void
+    {
+        if (!in_array($role, [self::ROLE_USER, self::ROLE_ADMIN], true)) {
+            throw new \InvalidArgumentException('Undefined role "' . $role . '"');
+        }
+
+        if ($this->role === $role) {
+            throw new \DomainException('Role is already assigned.');
+        }
+
+        $this->update(['role' => $role]);
     }
 
     /**

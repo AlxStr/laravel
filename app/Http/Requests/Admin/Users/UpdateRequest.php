@@ -35,7 +35,8 @@ class UpdateRequest extends FormRequest
         return [
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user->id)],
-            'status'   => ['required', 'string', Rule::in([User::STATUS_WAIT, User::STATUS_ACTIVE])]
+            'status'   => ['required', 'string', Rule::in([User::STATUS_WAIT, User::STATUS_ACTIVE])],
+            'role'     => ['required', 'string', Rule::in([User::ROLE_USER, User::ROLE_ADMIN])]
         ];
     }
 }

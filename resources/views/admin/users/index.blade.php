@@ -12,6 +12,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
+            <th>Role</th>
         </tr>
         </thead>
         <tbody>
@@ -29,11 +30,20 @@
                         <span class="badge badge-primary">Active</span>
                     @endif
                 </td>
+                <td>
+                    @if ($user->isAdmin())
+                        <span class="badge badge-danger">Admin</span>
+                    @else
+                        <span class="badge badge-secondary">User</span>
+                    @endif
+                </td>
             </tr>
         @endforeach
 
         </tbody>
     </table>
 
-    {{ $users->links() }}
+    <div class="d-flex justify-content-center">
+        {{ $users->links() }}
+    </div>
 @endsection

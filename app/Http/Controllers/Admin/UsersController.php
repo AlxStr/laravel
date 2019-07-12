@@ -94,7 +94,12 @@ class UsersController extends Controller
             User::STATUS_ACTIVE => 'Active',
         ];
 
-        return view('admin.users.edit', compact('user', 'statuses'));
+        $roles = [
+            User::ROLE_USER  => 'User',
+            User::ROLE_ADMIN => 'Admin',
+        ];
+
+        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
     }
 
     /**
@@ -107,7 +112,7 @@ class UsersController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
-        $user->update($request->only(['name', 'email', 'status']));
+        $user->update($request->only(['name', 'email', 'status', 'role']));
 
         return redirect()->route('admin.users.show', $user);
     }

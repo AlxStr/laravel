@@ -30,11 +30,21 @@
         <tr>
             <th>Status</th>
             <td>
-                @if ($user->status === \App\Entity\User::STATUS_WAIT)
+                @if ($user->isWait())
                     <span class="badge badge-secondary">Waiting</span>
                 @endif
-                @if ($user->status === \App\Entity\User::STATUS_ACTIVE)
+                @if ($user->isActive())
                     <span class="badge badge-primary">Active</span>
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                @if ($user->isAdmin())
+                    <span class="badge badge-danger">Admin</span>
+                @else
+                    <span class="badge badge-secondary">User</span>
                 @endif
             </td>
         </tr>

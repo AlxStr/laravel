@@ -3,43 +3,36 @@
 namespace App\Console\Commands\Users;
 
 use App\Entity\User;
-use App\Http\Services\Auth\RegisterService;
 use Illuminate\Console\Command;
 
 /**
- * Class VerifyCommand
+ * Class RoleCommand
  *
  * @package App\Console\Commands\Users
  */
-class VerifyCommand extends Command
+class RoleCommand extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'user:verify {email}';
+    protected $signature = 'user:role {email} {role}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Verify user';
+    protected $description = 'Change user role';
 
     /**
-     * @var RegisterService
+     * Create a new command instance.
+     *
+     * @return void
      */
-    private $registerService;
-
-
-    /**
-     * VerifyCommand constructor.
-     */
-    public function __construct(RegisterService $service)
+    public function __construct()
     {
-        $this->registerService = $service;
         parent::__construct();
     }
 
@@ -51,18 +44,24 @@ class VerifyCommand extends Command
     public function handle(): bool
     {
         $email = $this->argument('email');
+        $role = $this->argument('role');
 
+        /** @var User $user */
         $user = User::where('email', $email)->first();
 
+        if (!$user) {
+            $this->error('Undefined user with that email.');
+            return false;
+        }
+
         try {
-            $this->registerService->verify($user->verify_token);
+            $user->changeRole($role);
         } catch (\Throwable $e) {
             $this->error($e->getMessage());
             return false;
         }
 
-        $this->info('User ' . $user->name .' with email ' . $email . ' verified successfully.');
-
+        $this->info('Role is successfully assigned.');
         return true;
     }
 }

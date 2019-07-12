@@ -9,3 +9,6 @@ docker-down:
 
 docker-bash:
 	docker-compose exec php-fpm bash
+
+test:
+	docker-compose exec php-cli vendor/bin/phpunit
