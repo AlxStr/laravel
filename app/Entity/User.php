@@ -21,6 +21,7 @@ use Mockery\Exception;
  */
 class User extends Authenticatable
 {
+    /** User active statuses */
     const STATUS_WAIT   = 'wait';
     const STATUS_ACTIVE = 'active';
 
@@ -45,7 +46,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
