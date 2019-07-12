@@ -56,15 +56,13 @@ class VerifyCommand extends Command
 
         try {
             $this->registerService->verify($user->verify_token);
-            $this->info('User ' . $user->name .' with email ' . $email . ' verified successfully.');
-
-            return true;
-
         } catch (\Throwable $e) {
-
             $this->error($e->getMessage());
-
             return false;
         }
+
+        $this->info('User ' . $user->name .' with email ' . $email . ' verified successfully.');
+
+        return true;
     }
 }
