@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cabinet;
 
 use App\Entity\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CabinetController extends Controller
 {
