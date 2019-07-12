@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\Users\CreateRequest;
 use App\Http\Requests\Admin\Users\UpdateRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Auth\RegisterService;
+use Illuminate\Http\Request;
 
 /**
  * Class UsersController
@@ -33,13 +34,47 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('id', 'desc')->paginate(20);
+        $query = User::orderByDesc('id');
 
-        return view('admin.users.index', compact('users'));
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+
+        if (!empty($value = $request->get('name'))) {
+            $query->where('name', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('email'))) {
+            $query->where('email', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+
+        if (!empty($value = $request->get('role'))) {
+            $query->where('role', $value);
+        }
+
+        $users = $query->paginate(20);
+
+        $statuses = [
+            User::STATUS_WAIT   => 'Wait',
+            User::STATUS_ACTIVE => 'Active',
+        ];
+
+        $roles = [
+            User::ROLE_USER  => 'User',
+            User::ROLE_ADMIN => 'Admin',
+        ];
+
+        return view('admin.users.index', compact('users', 'statuses', 'roles'));
     }
 
     /**
