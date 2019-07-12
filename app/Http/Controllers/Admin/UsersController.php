@@ -25,6 +25,8 @@ class UsersController extends Controller
 
     /**
      * UsersController constructor.
+     *
+     * @param RegisterService $service
      */
     public function __construct(RegisterService $service)
     {
