@@ -55,7 +55,7 @@ class RegionsController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:255|unique:regions,name,NULL,id,parent_id,' . ($request['parent'] ?: 'NULL'),
             'slug' => 'required|string|max:255|unique:regions,slug,NULL,id,parent_id,' . ($request['parent'] ?: 'NULL'),
-            'parent' => 'optional|exists:regions,id',
+            'parent' => 'nullable|exists:regions,id',
         ]);
 
         $region = Region::create([

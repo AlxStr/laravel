@@ -26,5 +26,8 @@
         </tbody>
     </table>
 
+    <p>
+        <a href="{{ route('admin.regions.create', ['parent' => $region->id]) }}" class="btn btn-success text-light">Add Region</a>
+    </p>
     @include('admin.regions._list', ['regions' => $children])
 @endsection
