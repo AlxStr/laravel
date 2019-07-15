@@ -43,6 +43,10 @@ Route::group(
         Route::resource('users', 'UsersController');
         Route::resource('regions', 'RegionsController');
         Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
+
+        Route::group(['prefix' => 'adverts', 'as' => 'adverts.', 'namespace' => 'Advert'], function () {
+            Route::resource('categories', 'CategoryController');
+        });
     }
 );
 

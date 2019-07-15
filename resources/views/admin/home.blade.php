@@ -5,5 +5,6 @@
         <li class="li nav-item"><a href=" {{ route('admin.home') }} " class="nav-link active">Dashboard</a></li>
         <li class="li nav-item"><a href=" {{ route('admin.users.index') }} " class="nav-link">Users</a></li>
         <li class="li nav-item"><a href=" {{ route('admin.regions.index') }} " class="nav-link">Regions</a></li>
+        <li class="li nav-item"><a href=" {{ route('admin.adverts.categories.index') }} " class="nav-link">Categories</a></li>
     </ul>
 @endsection
