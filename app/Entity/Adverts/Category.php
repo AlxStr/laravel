@@ -9,6 +9,11 @@ use Kalnoy\Nestedset\NodeTrait;
  * Class Category
  *
  * @package App\Entity\Adverts
+ *
+ * @property string  $name
+ * @property string  $slug
+ * @property integer $parent_id
+ *
  */
 class Category extends Model
 {

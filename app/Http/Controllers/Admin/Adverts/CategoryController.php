@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::defaultOrder()->get();
+        $categories = Category::defaultOrder()->withDepth()->get();
 
         return view('admin.adverts.categories.index', compact('categories'));
     }
@@ -29,7 +29,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $parents = Category::defaultOrder()->get();
+        $parents = Category::defaultOrder()->withDepth()->get();
 
         return view('admin.adverts.categories.create', compact('parents'));
     }
@@ -55,7 +55,6 @@ class CategoryController extends Controller
             'name'      => $request['name'],
             'slug'      => $request['slug'],
             'parent_id' => $request['parent'],
-
         ]);
 
         return redirect('admin.adverts.categories.show', $category);
@@ -82,25 +81,44 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('admin.adverts.categories.edit', compact('category'));
+        $parents = Category::defaultOrder()->withDepth()->get();
+
+        return view('admin.adverts.categories.edit', compact('category', 'parents'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+
+     * @throws \Illuminate\Validation\ValidationException
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request, [
+            'name'   => 'required|string|max:255',
+            'slug'   => 'required|string|max:255',
+            'parent' => 'nullable|integer|exists:advert_categories,id',
+        ]);
+
+        $category->update([
+            'name'      => $request['name'],
+            'slug'      => $request['slug'],
+            'parent_id' => $request['parent'],
+        ]);
+
+        return redirect()->route('admin.adverts.categories.show', $category);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Category $category
+     * @param Category $category
+     *
+     * @throws \Exception
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Category $category)

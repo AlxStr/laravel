@@ -2,6 +2,7 @@
 
 use App\Entity\Region;
 use App\Entity\User;
+use App\Entity\Adverts\Category;
 use \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
 Breadcrumbs::for('home', function ($trail) {
@@ -88,17 +89,30 @@ Breadcrumbs::for('admin.regions.edit', function ($trail, Region $region) {
 });
 
 
+/**
+ * Admin/Adverts/Categories
+ */
+Breadcrumbs::for('admin.adverts.categories.index', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Regions', route('admin.adverts.categories.index'));
+});
 
-//
-//Breadcrumbs::for('category', function ($trail, $category) {
-//    if ($category->parent) {
-//        $trail->parent('category', $category->parent);
+Breadcrumbs::for('admin.adverts.categories.create', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Create', route('admin.adverts.categories.create'));
+});
+
+Breadcrumbs::for('admin.adverts.categories.show', function ($trail, Category $category) {
+//    if ($parent = $category->parent) {
+//        $trail->parent('admin.adverts.categories.show', $category);
+//    } else {
+//        $trail->parent('admin.adverts.categories.index');
 //    }
-//    $trail->push($category->name, route('category'));
-//});
-//
-//Breadcrumbs::for('advert', function ($trail, $advert) {
-//    $trail->parent('region', $advert->region);
-//    $trail->parent('category', $advert->category);
-//    $trail->push($advert->name, route('category'));
-//});
+
+    $trail->push($category->name, route('admin.adverts.categories.show', $category));
+});
+
+Breadcrumbs::for('admin.adverts.categories.edit', function ($trail, Category $category) {
+    $trail->parent('admin.home');
+    $trail->push('Edit', route('admin.adverts.categories.edit', $category));
+});
